@@ -16,18 +16,19 @@ const LaunchRequestHandler = {
   }
 };
 
-const HelloWorldIntentHandler = {
+const getArtistIntentHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && handlerInput.requestEnvelope.request.intent.name === 'HelloWorldIntent';
+      && handlerInput.requestEnvelope.request.intent.name === 'GetArtistIntent';
   },
   handle(handlerInput) {
-    const speechText = 'Hello World!';
+    let artist_name = handlerInput.requestEnvelope.request.intent.slots.artist.value;
+    const speechText = 'Great, ' + artist_name;
 
     return handlerInput.responseBuilder
       .speak(speechText)
-      .repromt(speechText)
-      .withSimpleCard('Hello World', speechText)
+      .reprompt(speechText)
+      .withSimpleCard('Get Artist', speechText)
       .getResponse();
   }
 };
@@ -124,7 +125,7 @@ const saveResponseForRepeatInterceptor = {
 exports.handler = Alexa.SkillBuilders.custom()
   .addRequestHandlers(
     LaunchRequestHandler,
-    HelloWorldIntentHandler,
+    getArtistIntentHandler,
     HelpIntentHandler,
     RepeatIntentHandler,
     CancelAndStopIntentHandler,
