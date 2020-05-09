@@ -6,12 +6,12 @@ const LaunchRequestHandler = {
     return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
   handle(handlerInput) {
-    const speechText = 'Welcome to the Alexa Skills Kit, you can say hello!';
-
+    const speechText = 'Welcome to Song Match. I can help you understand which song by your favorite artist best matches your life. Please tell me the name of your favorite artist.';
+    const repromtText = 'Welcome to Song Match..Please tell me the name of your favorite artist.';
     return handlerInput.responseBuilder
       .speak(speechText)
-      .reprompt(speechText)
-      .withSimpleCard('Hello World', speechText)
+      .reprompt(repromtText)
+      .withSimpleCard('Wecome user', speechText)
       .getResponse();
   }
 };
@@ -26,9 +26,29 @@ const HelloWorldIntentHandler = {
 
     return handlerInput.responseBuilder
       .speak(speechText)
+      .repromt(speechText)
       .withSimpleCard('Hello World', speechText)
       .getResponse();
   }
+};
+
+const RepeatIntentHandler = {
+  canHandle(handlerInput) {
+    console.log("Inside the can handle repeat handler");
+    return  handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.RepeatIntent'; 
+  },
+  handle(handlerInput) {
+    console.log("Inside the handle of repeat handler")
+    const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+    const { lastResponse } = sessionAttributes;
+    const speechText = lastResponse;
+    console.log(speechText);
+    return handlerInput.responseBuilder
+      .speak(speechText)
+      .reprompt(speechText)
+      .getResponse();
+  },
 };
 
 const HelpIntentHandler = {
@@ -88,13 +108,27 @@ const ErrorHandler = {
   },
 };
 
+const saveResponseForRepeatInterceptor = {
+  process(handlerInput) {
+    console.log("Saving for repeating later");
+    const response = handlerInput.responseBuilder.getResponse().outputSpeech.ssml;
+    console.log(response);
+    const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+    sessionAttributes.lastResponse = response;
+    console.log(sessionAttributes);
+    handlerInput.attributesManager.setSessionAttributes(sessionAttributes);
+  },
+};
+
 /***********Lambda Handler*********************/
 exports.handler = Alexa.SkillBuilders.custom()
   .addRequestHandlers(
     LaunchRequestHandler,
     HelloWorldIntentHandler,
     HelpIntentHandler,
+    RepeatIntentHandler,
     CancelAndStopIntentHandler,
     SessionEndedRequestHandler)
+  .addResponseInterceptors(saveResponseForRepeatInterceptor)
   .addErrorHandlers(ErrorHandler)
   .lambda();
