@@ -57,6 +57,7 @@ const songsForCombos = {
 };
 
 /********Functions that controls skill's behaviour****************/
+//gets the question from the questions list of the artist and returns the question.
 function getQuestion(counter, artist_name) {
   //console.log("Inside get Question function");
   let artist = artist_name.split(' ').join('');
@@ -67,20 +68,29 @@ function getQuestion(counter, artist_name) {
   return question;
 }
 
+//Function used to map the user inputs to find the "song match". Returns the song matched
 function giveResult() {
   //console.log("Inside function for getting result");
   let final_result = "";
   //answer list = ["happy", "empathy", "blackheart"];
-  final_result = songsForCombos[answerList[0]][answerList[1]][answerList[2]];
+  final_result = songsForCombos[answerList.slice(-3)[0]][answerList.slice(-2)[0]][answerList.slice(-1)[0]];
   //console.log(final_result);
   return final_result;
 }
+
+//function used to generate a random number from 0 to 2
+function randomGenerator() {
+  let randomNum = Math.floor(Math.random() * 2);
+  return randomNum;
+}
+
 /********Intent Handlers************/
 const LaunchRequestHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
+  canHandle : (handlerInput) => {
+    const request = handlerInput.requestEnvelope.request;
+    return request.type === 'LaunchRequest';
   },
-  handle(handlerInput) {
+  handle : (handlerInput) => {
     const speechText = 'Welcome to Song Match. I can help you understand which song by your favorite artist best matches your life. Please tell me the name of your favorite artist.';
     const repromtText = 'Welcome to Song Match..Please tell me the name of your favorite artist.';
     return handlerInput.responseBuilder
@@ -92,18 +102,18 @@ const LaunchRequestHandler = {
 };
 
 const getArtistIntentHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && handlerInput.requestEnvelope.request.intent.name === 'GetArtistIntent';
+  canHandle : (handlerInput) => {
+    const request = handlerInput.requestEnvelope.request;
+    return request.type === 'IntentRequest' && request.intent.name === 'GetArtistIntent';
   },
-  handle(handlerInput) {
+  handle : (handlerInput) => {
     artist_name = handlerInput.requestEnvelope.request.intent.slots.artist.value;
 
     //console.log(artist_name);
     counter = 0;    //to keep track of the number of questions asked
     let question = getQuestion(counter, artist_name);
     //console.log("Returned from getQuestion function");
-    let randomNum = Math.floor(Math.random() * 2);
+    let randomNum = randomGenerator();  //to get a random number
     let randomExpr = greetings[randomNum];
     const speechText = randomExpr + '!' + artist_name + '. ' + question;     //asks the first question
     counter += 1;
@@ -117,11 +127,12 @@ const getArtistIntentHandler = {
 };
 
 const getAnswerIntentHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && handlerInput.requestEnvelope.request.intent.name === 'GetAnswerIntent';
+  canHandle : (handlerInput) => {
+    const request = handlerInput.requestEnvelope.request;
+    return request.type === 'IntentRequest'
+      && request.intent.name === 'GetAnswerIntent';
   },
-  handle(handlerInput) {
+  handle : (handlerInput) => {
     let answer = handlerInput.requestEnvelope.request.intent.slots.answer.value;
     answer = answer.toLowerCase();
     answer = answer.split(' ').join('');
@@ -130,7 +141,7 @@ const getAnswerIntentHandler = {
     let speechText = "";
     if(counter < 3) {       //decides if further questions needs to be asked
       let question = getQuestion(counter, artist_name);
-      let randomNum = Math.floor(Math.random() * 2);
+      let randomNum = randomGenerator();   //to get a random number
       let randomExpr = replyForMoods[randomNum];
       speechText = randomExpr + '. ' + question;
       counter += 1;
@@ -149,12 +160,13 @@ const getAnswerIntentHandler = {
   }
 };
 const RepeatIntentHandler = {
-  canHandle(handlerInput) {
+  canHandle : (handlerInput) => {
     console.log("Inside the can handle repeat handler");
-    return  handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.RepeatIntent'; 
+    const request = handlerInput.requestEnvelope.request;
+    return  request.type === 'IntentRequest'
+      && request.intent.name === 'AMAZON.RepeatIntent'; 
   },
-  handle(handlerInput) {
+  handle : (handlerInput) => {
     console.log("Inside the handle of repeat handler")
     const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
     const { lastResponse } = sessionAttributes;
@@ -168,43 +180,44 @@ const RepeatIntentHandler = {
 };
 
 const HelpIntentHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent';
+  canHandle : (handlerInput) => {
+    const request = handlerInput.requestEnvelope.request;
+    return request.type === 'IntentRequest'
+      && request.intent.name === 'AMAZON.HelpIntent';
   },
-  handle(handlerInput) {
-    const speechText = 'You can say hello to me!';
+  handle : (handlerInput) => {
+    const speechText = 'Tell me your favorite artist. I will ask a few questions and at the end I will tell you which song of your favorite ar matches your life.';
 
     return handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(speechText)
-      .withSimpleCard('Hello World', speechText)
+      .withSimpleCard('Help user', speechText)
       .getResponse();
   }
 };
 
 const CancelAndStopIntentHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && (handlerInput.requestEnvelope.request.intent.name === 'AMAZON.CancelIntent'
-        || handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent');
+  canHandle : (handlerInput) => {
+    const request = handlerInput.requestEnvelope.request;
+    return request.type === 'IntentRequest'
+      && (request.intent.name === 'AMAZON.CancelIntent' || request.intent.name === 'AMAZON.StopIntent');
   },
-  handle(handlerInput) {
+  handle : (handlerInput) => {
     const speechText = 'Goodbye!';
 
     return handlerInput.responseBuilder
       .speak(speechText)
-      .withSimpleCard('Hello World', speechText)
+      .withSimpleCard('Cancel application', speechText)
       .withShouldEndSession(true)
       .getResponse();
   }
 };
 
 const SessionEndedRequestHandler = {
-  canHandle(handlerInput) {
+  canHandle : (handlerInput) => {
     return handlerInput.requestEnvelope.request.type === 'SessionEndedRequest';
   },
-  handle(handlerInput) {
+  handle : (handlerInput) => {
     //any cleanup logic goes here
     counter = 0;
     artist_name = "";
@@ -217,12 +230,12 @@ const ErrorHandler = {
   canHandle() {
     return true;
   },
-  handle(handlerInput, error) {
+  handle : (handlerInput, error) => {
     console.log(`Error handled: ${error.message}`);
-
+    const speechText = "Sorry, I can\'t understand the command. Please say again.";
     return handlerInput.responseBuilder
-      .speak('Sorry, I can\'t understand the command. Please say again.')
-      .reprompt('Sorry, I can\'t understand the command. Please say again.')
+      .speak(speechText)
+      .reprompt(speechText)
       .getResponse();
   },
 };
