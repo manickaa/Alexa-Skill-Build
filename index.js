@@ -5,12 +5,15 @@ let counter = 0;
 let artist_name = "";
 let answerList = [];
 
+const greetings = ["Great!", "Excellent choice!", "Nice one"];
+const replyForMoods = ["Got it!", "Okay", "Understood"];
+
 //example questions
 const questionsForArtists = {
-  Arianagrande: ["How are you feeling right now? Sad, Anxious  or  Happy?", "What is your best quality? Wisdom, Manipulation or Empathy? ", "Which emoji do you prefer? Black Heart or White Clouds?"],
-  Brunomars: ["Choose a place for vacation: Tokyo, Los Angeles  or  Melbourne ", "How are you feeling right now? Happy, sad  or  Depressed", "Its friday night!!! You're gonna stay home or hang out?"],
-  BillieEilish: ["If you had to, which would you change your name to? River,  Bailey  or Charlie", "Choose a form of potatoes: French fries , Tater tots or Cheese Potatoes?", "Choose a style of hat: Beanie or Cowboy"],
-  CharliePuth: ["What is your favorite icecream flavor ? Vanilla, Strawberry or Chocolates", "What is your favorite cuisine ? Italian , Mexican or American", "Which one would you choose : beaches or mountains ?"]
+  Arianagrande: ["How are you feeling right now?  Sad, Anxious  or  Happy?", "What is your best quality?  Wisdom,  Manipulation  or  Empathy? ", "Which emoji do you prefer?  Black Heart  or  White Clouds?"],
+  Brunomars: ["Choose a place for vacation: Tokyo, Los Angeles  or  Melbourne ", "How are you feeling right now?  Excited,  silly  or  surprised", "Its friday night!!! You're gonna stay home  or  hang out?"],
+  Billieeilish: ["If you had to, which would you change your name to? River,  Bailey  or Johnny", "Choose a form of potatoes:  French fries , Tater tots or Cheese Potatoes?", "Choose a style of hat:  Beanie or Cowboy"],
+  Charlieputh: ["What is your favorite icecream flavor ?  Vanilla,  Strawberry  or  Chocolates", "What is your favorite cuisine ? Italian , Mexican  or  American", "Which one would you choose : Beaches  or  Mountains ?"]
 };
 
 //initial song combos only for sad mood
@@ -24,22 +27,22 @@ const songsForCombos = {
   happy: {empathy: {blackheart: "Imagine", whiteclouds: "Into You"},
             wisdom: {blackheart: "Love me harder", whiteclouds: "Breathing"},
             manipulation: {blackheart: "Don't call me an Angel", whiteclouds: "The way"}},
-  tokyo : {happy: {stayhome: "Uptown Funk", hangout: "Just the way you are"},
-          sad: {stayhome: "Grenade", hangout: "When I was your man"},
-          depressed: {stayhome: "That's what I like", hangout: "It will rain"}},
-  vegas : {happy: {stayhome: "The Lazy song", hangout: "24k magic"},
-          sad: {stayhome: "Finesse", hangout: "Locked out of heaven"},
-          depressed: {stayhome: "Versace on the floor", hangout: "Treasure"}},
-  melbourne : {happy: {stayhome: "Nonthing on you", hangout: "Gorilla"},
-          sad: {stayhome: "Billionaire", hangout: "Young, wild and free"},
-          depressed: {stayhome: "Please me", hangout: "Young girls"}},
+  tokyo : {excited: {stayhome: "Uptown Funk", hangout: "Just the way you are"},
+          silly: {stayhome: "Grenade", hangout: "When I was your man"},
+          surprised: {stayhome: "That's what I like", hangout: "It will rain"}},
+  vegas : {excited: {stayhome: "The Lazy song", hangout: "24k magic"},
+          silly: {stayhome: "Finesse", hangout: "Locked out of heaven"},
+          surprised: {stayhome: "Versace on the floor", hangout: "Treasure"}},
+  melbourne : {excited: {stayhome: "Nonthing on you", hangout: "Gorilla"},
+          silly: {stayhome: "Billionaire", hangout: "Young, wild and free"},
+          surprised: {stayhome: "Please me", hangout: "Young girls"}},
   river : {frenchfries: {beanie: "Bad guy", cowboy: "Ocean eyes"},
           tarttoes: {beanie: "Lovely", cowboy: "When the party is over"},
           cheesepotatoes: {beanie: "No time to die", cowboy: "Bury a friend"}},
   bailey : {frenchfries: {beanie: "Everything I wanted", cowboy: "Watch"},
           tarttoes: {beanie: "Listen Before I go", cowboy: "Copy cat"},
           cheesepotatoes: {beanie: "Belly ache", cowboy: "Bored"}},
-  charlie : {frenchfries: {beanie: "Come out and play", cowboy: "Six feet under"},
+  johnny : {frenchfries: {beanie: "Come out and play", cowboy: "Six feet under"},
           tarttoes: {beanie: "My strange addiction", cowboy: "My boy"},
           cheesepotatoes: {beanie: "Hostage", cowboy: "Fingers crossed"}},
   vanilla : {italian : {beaches: "See you again", mountains: "Attention"},
@@ -55,9 +58,9 @@ const songsForCombos = {
 
 /********Functions that controls skill's behaviour****************/
 function getQuestion(counter, artist_name) {
-  console.log("Inside get Question function");
+  //console.log("Inside get Question function");
   let artist = artist_name.split(' ').join('');
-  console.log(artist);
+  //console.log(artist);
   let list = questionsForArtists[artist];
   let question = list[counter];
   console.log(question);
@@ -65,11 +68,11 @@ function getQuestion(counter, artist_name) {
 }
 
 function giveResult() {
-  console.log("Inside function for getting result");
+  //console.log("Inside function for getting result");
   let final_result = "";
   //answer list = ["happy", "empathy", "blackheart"];
   final_result = songsForCombos[answerList[0]][answerList[1]][answerList[2]];
-  console.log(final_result);
+  //console.log(final_result);
   return final_result;
 }
 /********Intent Handlers************/
@@ -83,7 +86,7 @@ const LaunchRequestHandler = {
     return handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(repromtText)
-      .withSimpleCard('Wecome user', speechText)
+      .withSimpleCard('Welcome user', speechText)
       .getResponse();
   }
 };
@@ -96,11 +99,13 @@ const getArtistIntentHandler = {
   handle(handlerInput) {
     artist_name = handlerInput.requestEnvelope.request.intent.slots.artist.value;
 
-    console.log(artist_name);
+    //console.log(artist_name);
     counter = 0;    //to keep track of the number of questions asked
     let question = getQuestion(counter, artist_name);
-    console.log("Returned from getQuestion function");
-    const speechText = 'Great, ' + artist_name + '. ' + question;     //asks the first question
+    //console.log("Returned from getQuestion function");
+    let randomNum = Math.floor(Math.random() * 2);
+    let randomExpr = greetings[randomNum];
+    const speechText = randomExpr + '!' + artist_name + '. ' + question;     //asks the first question
     counter += 1;
 
     return handlerInput.responseBuilder
@@ -121,17 +126,19 @@ const getAnswerIntentHandler = {
     answer = answer.toLowerCase();
     answer = answer.split(' ').join('');
     answerList.push(answer);
-    console.log(answerList);
+    //console.log(answerList);
     let speechText = "";
     if(counter < 3) {       //decides if further questions needs to be asked
       let question = getQuestion(counter, artist_name);
-      speechText = 'Question ' + (counter+1) + ' ' + question;
+      let randomNum = Math.floor(Math.random() * 2);
+      let randomExpr = replyForMoods[randomNum];
+      speechText = randomExpr + '. ' + question;
       counter += 1;
     }
     else {
-      speechText = "End of questions. ";
+      speechText = "Thanks for answering the questions... ";
       let song_matched = giveResult();
-      console.log(song_matched);
+      //console.log(song_matched);
       speechText += "Based on your answers, your " + artist_name + " song match is " + song_matched;
     }
     return handlerInput.responseBuilder
