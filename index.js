@@ -8,15 +8,49 @@ let answerList = [];
 //example questions
 const questionsForArtists = {
   Arianagrande: ["How are you feeling right now? Sad, Anxious  or  Happy?", "What is your best quality? Wisdom, Manipulation or Empathy? ", "Which emoji do you prefer? Black Heart or White Clouds?"],
-  Brunomars: ["Choose a place for vacation: Tokyo, Los Angeles  or  Melbourne ", "How are you feeling right now? Happy, sad  or  Depressed", "Its friday night!!! You're gonna stay home or hang out with friends?"],
-  BillieEilish: ["If you had to, which would you change your name to? River,  Bailey  or Charlie", "Choose a form of potatoes: French fries , Tater tots or Cheese Potatoes?", "Choose a style of hat: Beanie or baseball hat"]
+  Brunomars: ["Choose a place for vacation: Tokyo, Los Angeles  or  Melbourne ", "How are you feeling right now? Happy, sad  or  Depressed", "Its friday night!!! You're gonna stay home or hang out?"],
+  BillieEilish: ["If you had to, which would you change your name to? River,  Bailey  or Charlie", "Choose a form of potatoes: French fries , Tater tots or Cheese Potatoes?", "Choose a style of hat: Beanie or Cowboy"],
+  CharliePuth: ["What is your favorite icecream flavor ? Vanilla, Strawberry or Chocolates", "What is your favorite cuisine ? Italian , Mexican or American", "Which one would you choose : beaches or mountains ?"]
 };
 
 //initial song combos only for sad mood
 const songsForCombos = {
   sad: {empathy : {blackheart: "Thank You Next" , whiteclouds: "Sweetner"},
         wisdom : {blackheart: "Every day", whiteclouds: "Be Alright"},
-        manipulation: {blackheart: "Beauty and Beast", whiteclouds: "Focus"}}
+        manipulation: {blackheart: "Beauty and Beast", whiteclouds: "Focus"}},
+  anxious: {empathy: {blackheart: "Bad Idea", whiteclouds: "Side to Side"},
+            wisdom: {blackheart: "Bang Bang", whiteclouds: "God is a woman"},
+            manipulation: {blackheart: "Problem", whiteclouds: "Break free"}},
+  happy: {empathy: {blackheart: "Imagine", whiteclouds: "Into You"},
+            wisdom: {blackheart: "Love me harder", whiteclouds: "Breathing"},
+            manipulation: {blackheart: "Don't call me an Angel", whiteclouds: "The way"}},
+  tokyo : {happy: {stayhome: "Uptown Funk", hangout: "Just the way you are"},
+          sad: {stayhome: "Grenade", hangout: "When I was your man"},
+          depressed: {stayhome: "That's what I like", hangout: "It will rain"}},
+  vegas : {happy: {stayhome: "The Lazy song", hangout: "24k magic"},
+          sad: {stayhome: "Finesse", hangout: "Locked out of heaven"},
+          depressed: {stayhome: "Versace on the floor", hangout: "Treasure"}},
+  melbourne : {happy: {stayhome: "Nonthing on you", hangout: "Gorilla"},
+          sad: {stayhome: "Billionaire", hangout: "Young, wild and free"},
+          depressed: {stayhome: "Please me", hangout: "Young girls"}},
+  river : {frenchfries: {beanie: "Bad guy", cowboy: "Ocean eyes"},
+          tarttoes: {beanie: "Lovely", cowboy: "When the party is over"},
+          cheesepotatoes: {beanie: "No time to die", cowboy: "Bury a friend"}},
+  bailey : {frenchfries: {beanie: "Everything I wanted", cowboy: "Watch"},
+          tarttoes: {beanie: "Listen Before I go", cowboy: "Copy cat"},
+          cheesepotatoes: {beanie: "Belly ache", cowboy: "Bored"}},
+  charlie : {frenchfries: {beanie: "Come out and play", cowboy: "Six feet under"},
+          tarttoes: {beanie: "My strange addiction", cowboy: "My boy"},
+          cheesepotatoes: {beanie: "Hostage", cowboy: "Fingers crossed"}},
+  vanilla : {italian : {beaches: "See you again", mountains: "Attention"},
+            mexican : {beaches: "We dont talk anymore", mountains: "One call away"},
+            american : {beaches: "How long", mountains: "Done for me"}},
+  strawberry : {italian : {beaches: "I warned myself", mountains: "Dangerously"},
+            mexican : {beaches: "Mother", mountains: "The way I am"},
+            american : {beaches: "Patient", mountains: "Change"}},
+  chocolate : {italian : {beaches: "Sober", mountains: "Oops"},
+            mexican : {beaches: "Boy", mountains: "If you leave me now"},
+            american : {beaches: "Slow it down", mountains: "Suffer"}}
 };
 
 /********Functions that controls skill's behaviour****************/
