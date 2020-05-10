@@ -1,5 +1,43 @@
 const Alexa = require('ask-sdk-core');
 
+/*******variable declarations*************************************/
+let counter = 0;
+let artist_name = "";
+let answerList = [];
+
+//example questions
+const questionsForArtists = {
+  Arianagrande: ["How are you feeling right now? Sad, Anxious  or  Happy?", "What is your best quality? Wisdom, Manipulation or Empathy? ", "Which emoji do you prefer? Black Heart or White Clouds?"],
+  Brunomars: ["Choose a place for vacation: Tokyo, Los Angeles  or  Melbourne ", "How are you feeling right now? Happy, sad  or  Depressed", "Its friday night!!! You're gonna stay home or hang out with friends?"],
+  BillieEilish: ["If you had to, which would you change your name to? River,  Bailey  or Charlie", "Choose a form of potatoes: French fries , Tater tots or Cheese Potatoes?", "Choose a style of hat: Beanie or baseball hat"]
+};
+
+//initial song combos only for sad mood
+const songsForCombos = {
+  sad: {empathy : {blackheart: "Thank You Next" , whiteclouds: "Sweetner"},
+        wisdom : {blackheart: "Every day", whiteclouds: "Be Alright"},
+        manipulation: {blackheart: "Beauty and Beast", whiteclouds: "Focus"}}
+};
+
+/********Functions that controls skill's behaviour****************/
+function getQuestion(counter, artist_name) {
+  console.log("Inside get Question function");
+  let artist = artist_name.split(' ').join('');
+  console.log(artist);
+  let list = questionsForArtists[artist];
+  let question = list[counter];
+  console.log(question);
+  return question;
+}
+
+function giveResult() {
+  console.log("Inside function for getting result");
+  let final_result = "";
+  //answer list = ["happy", "empathy", "blackheart"];
+  final_result = songsForCombos[answerList[0]][answerList[1]][answerList[2]];
+  console.log(final_result);
+  return final_result;
+}
 /********Intent Handlers************/
 const LaunchRequestHandler = {
   canHandle(handlerInput) {
@@ -22,8 +60,14 @@ const getArtistIntentHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'GetArtistIntent';
   },
   handle(handlerInput) {
-    let artist_name = handlerInput.requestEnvelope.request.intent.slots.artist.value;
-    const speechText = 'Great, ' + artist_name;
+    artist_name = handlerInput.requestEnvelope.request.intent.slots.artist.value;
+
+    console.log(artist_name);
+    counter = 0;    //to keep track of the number of questions asked
+    let question = getQuestion(counter, artist_name);
+    console.log("Returned from getQuestion function");
+    const speechText = 'Great, ' + artist_name + '. ' + question;     //asks the first question
+    counter += 1;
 
     return handlerInput.responseBuilder
       .speak(speechText)
@@ -33,6 +77,36 @@ const getArtistIntentHandler = {
   }
 };
 
+const getAnswerIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'GetAnswerIntent';
+  },
+  handle(handlerInput) {
+    let answer = handlerInput.requestEnvelope.request.intent.slots.answer.value;
+    answer = answer.toLowerCase();
+    answer = answer.split(' ').join('');
+    answerList.push(answer);
+    console.log(answerList);
+    let speechText = "";
+    if(counter < 3) {       //decides if further questions needs to be asked
+      let question = getQuestion(counter, artist_name);
+      speechText = 'Question ' + (counter+1) + ' ' + question;
+      counter += 1;
+    }
+    else {
+      speechText = "End of questions. ";
+      let song_matched = giveResult();
+      console.log(song_matched);
+      speechText += "Based on your answers, your " + artist_name + " song match is " + song_matched;
+    }
+    return handlerInput.responseBuilder
+      .speak(speechText)
+      .withSimpleCard('Get Answer', speechText)
+      .reprompt(speechText)
+      .getResponse();
+  }
+};
 const RepeatIntentHandler = {
   canHandle(handlerInput) {
     console.log("Inside the can handle repeat handler");
@@ -91,6 +165,9 @@ const SessionEndedRequestHandler = {
   },
   handle(handlerInput) {
     //any cleanup logic goes here
+    counter = 0;
+    artist_name = "";
+    answerList = [];
     return handlerInput.responseBuilder.getResponse();
   }
 };
@@ -126,6 +203,7 @@ exports.handler = Alexa.SkillBuilders.custom()
   .addRequestHandlers(
     LaunchRequestHandler,
     getArtistIntentHandler,
+    getAnswerIntentHandler,
     HelpIntentHandler,
     RepeatIntentHandler,
     CancelAndStopIntentHandler,
