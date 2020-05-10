@@ -6,7 +6,7 @@ let artist_name = "";
 let answerList = [];
 
 const greetings = ["Great!", "Excellent choice!", "Nice one"];
-const replyForMoods = ["Got it!", "Okay", "Understood"];
+const reply = ["Got it!", "Okay", "Understood"];
 
 //example questions
 const questionsForArtists = {
@@ -97,6 +97,7 @@ const LaunchRequestHandler = {
       .speak(speechText)
       .reprompt(repromtText)
       .withSimpleCard('Welcome user', speechText)
+      .withShouldEndSession(false)
       .getResponse();
   }
 };
@@ -122,6 +123,7 @@ const getArtistIntentHandler = {
       .speak(speechText)
       .reprompt(speechText)
       .withSimpleCard('Get Artist', speechText)
+      .withShouldEndSession(false)
       .getResponse();
   }
 };
@@ -142,7 +144,7 @@ const getAnswerIntentHandler = {
     if(counter < 3) {       //decides if further questions needs to be asked
       let question = getQuestion(counter, artist_name);
       let randomNum = randomGenerator();   //to get a random number
-      let randomExpr = replyForMoods[randomNum];
+      let randomExpr = reply[randomNum];
       speechText = randomExpr + '. ' + question;
       counter += 1;
     }
@@ -150,15 +152,39 @@ const getAnswerIntentHandler = {
       speechText = "Thanks for answering the questions... ";
       let song_matched = giveResult();
       //console.log(song_matched);
-      speechText += "Based on your answers, your " + artist_name + " song match is " + song_matched;
+      speechText += "Based on your answers.....your " + artist_name + " song match is..." + "\"" + song_matched + "\". ";
+      speechText += " Would you like to get another song match from a different artist? ";
     }
     return handlerInput.responseBuilder
       .speak(speechText)
       .withSimpleCard('Get Answer', speechText)
       .reprompt(speechText)
+      .withShouldEndSession(false)
       .getResponse();
   }
 };
+
+const getPlayAgainIntentHandler = {
+  canHandle : (handlerInput) => {
+    const request = handlerInput.requestEnvelope.request;
+    return request.type === 'IntentRequest' && request.intent.name === 'GetPlayAgainIntent';
+  },
+  handle : (handlerInput) => {
+    let intentType = "";
+    if(handlerInput.requestEnvelope.request.intent.slots.yes.value != null) {
+      intentType = "yes";
+      counter = 0;
+      artist_name = "";
+      answerList = [];
+      return LaunchRequestHandler.handle(handlerInput);
+    }
+    else {
+      intentType = "no";
+      return  CancelAndStopIntentHandler.handle(handlerInput);
+    }
+  }
+};
+
 const RepeatIntentHandler = {
   canHandle : (handlerInput) => {
     console.log("Inside the can handle repeat handler");
@@ -175,6 +201,7 @@ const RepeatIntentHandler = {
     return handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(speechText)
+      .withShouldEndSession(false)
       .getResponse();
   },
 };
@@ -203,7 +230,7 @@ const CancelAndStopIntentHandler = {
       && (request.intent.name === 'AMAZON.CancelIntent' || request.intent.name === 'AMAZON.StopIntent');
   },
   handle : (handlerInput) => {
-    const speechText = 'Goodbye!';
+    const speechText = 'Thank you for using Song Match. For another great skill, check out Song Quiz!';
 
     return handlerInput.responseBuilder
       .speak(speechText)
@@ -258,6 +285,7 @@ exports.handler = Alexa.SkillBuilders.custom()
     LaunchRequestHandler,
     getArtistIntentHandler,
     getAnswerIntentHandler,
+    getPlayAgainIntentHandler,
     HelpIntentHandler,
     RepeatIntentHandler,
     CancelAndStopIntentHandler,
