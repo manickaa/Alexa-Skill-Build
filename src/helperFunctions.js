@@ -10,10 +10,14 @@ const getQuestion = (counter, artist_name) => {
   
   const artist = artist_name.split(' ').join('');
   const list = questionsForArtists[artist];
+  if(list === undefined) {
+    return null;
+  }
+  else {
   const question = list[counter];
   //console.log(question);
   return question;
-  
+  }
 };
 
 //Function used to map the user inputs to find the "song match". Returns the song matched
@@ -33,6 +37,8 @@ const randomGenerator = (max) => {
   return randomNum;
 };
 
+//function to the check all the answers in the answerList are valid. If valid, it returns the mapped value in the dictionary.
+//Else, returns null
 const getProperty = (answerList, songsForCombos) => {
   return answerList.reduce((prop, nestedProp) => {
     return(prop && prop[nestedProp]) ? prop[nestedProp] : null;
