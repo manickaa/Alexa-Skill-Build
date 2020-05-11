@@ -1,3 +1,11 @@
+const WELCOME_TEXT = "Welcome to Song Match. I can help you understand which song, by your favorite artist, best matches your life. Please tell me the name of your favorite artist.";
+const WELCOME_REPROMPT = "Welcome to Song Match..Please tell me the name of your favorite artist.";
+
+const HELP_TEXT = 'Tell me your favorite artist. I will ask a few questions and at the end I will tell you which song of your favorite artist best matches your life.';
+const THANKYOU_TEXT = "Thanks for answering the questions... ";
+const PLAYAGAIN_TEXT = " Would you like to get another song match from a different artist? ";
+const EXIT_TEXT = "Thank you for using Song Match. Stay Home and Stay Safe";
+
 const greetings = ["Great!", "Excellent choice!", "Nice one"];
 const reply = ["Got it!", "Okay", "Understood"];
 const questionsForArtists = {
@@ -51,5 +59,11 @@ module.exports = {
   reply,
   questionsForArtists,
   songsForErrors,
-  songsForCombos
+  songsForCombos,
+  WELCOME_TEXT,
+  WELCOME_REPROMPT,
+  HELP_TEXT,
+  THANKYOU_TEXT,
+  PLAYAGAIN_TEXT,
+  EXIT_TEXT
 };
