@@ -1,0 +1,380 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "song quiz",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": [
+                        "Quit",
+                        "Cancel"
+                    ]
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": [
+                        "Help",
+                        "Please help me",
+                        "Can you help me"
+                    ]
+                },
+                {
+                    "name": "AMAZON.PauseIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": [
+                        "Stop"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "GetArtistIntent",
+                    "slots": [
+                        {
+                            "name": "artist",
+                            "type": "LIST_OF_ARTISTS"
+                        }
+                    ],
+                    "samples": [
+                        "{artist} is my favorite",
+                        "Hmm..let me think.. {artist}",
+                        "My favorite artist is {artist}",
+                        "{artist}"
+                    ]
+                },
+                {
+                    "name": "AMAZON.RepeatIntent",
+                    "samples": [
+                        "Please repeat",
+                        "What did you say",
+                        "Can you say that again",
+                        "Repeat"
+                    ]
+                },
+                {
+                    "name": "GetAnswerIntent",
+                    "slots": [
+                        {
+                            "name": "answer",
+                            "type": "LIST_OF_ANSWERS"
+                        }
+                    ],
+                    "samples": [
+                        "My best quality is {answer}",
+                        "I'm feeling {answer} right now",
+                        "I would like to choose {answer}",
+                        "I prefer {answer}",
+                        "{answer}"
+                    ]
+                },
+                {
+                    "name": "GetPlayAgainIntent",
+                    "slots": [
+                        {
+                            "name": "yes",
+                            "type": "LIST_OF_YES"
+                        },
+                        {
+                            "name": "no",
+                            "type": "LIST_OF_NO"
+                        }
+                    ],
+                    "samples": [
+                        "{no}",
+                        "{yes}"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "LIST_OF_ARTISTS",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "bruno mars",
+                                "synonyms": [
+                                    "Bruno"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "billie eilish",
+                                "synonyms": [
+                                    "Billie"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "charlie puth",
+                                "synonyms": [
+                                    "Charlie"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "ariana grande",
+                                "synonyms": [
+                                    "Ariana"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "LIST_OF_ANSWERS",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "American"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Mexican"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Italian"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Mountains",
+                                "synonyms": [
+                                    "Mountain"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Beaches",
+                                "synonyms": [
+                                    "Beach"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Chocolate"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Strawberry"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Vanilla"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Cowboy"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Beanie"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Cheese potatoes",
+                                "synonyms": [
+                                    "cheese potato"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Tater tots"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "French fries"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Johnny"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Bailey"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "River"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Hangout",
+                                "synonyms": [
+                                    "hang out with friends"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Stay home",
+                                "synonyms": [
+                                    "be at home",
+                                    "stay at home"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Surprised"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Silly"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Excited"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Melbourne"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Vegas",
+                                "synonyms": [
+                                    "Las vegas"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Tokyo"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "White clouds",
+                                "synonyms": [
+                                    "white cloud"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Black heart",
+                                "synonyms": [
+                                    "Black hearts"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Wisdom"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Manipulation"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Empathy"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Anxious"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Happy"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Sad"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "LIST_OF_YES",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "absolutely"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "yeah",
+                                "synonyms": [
+                                    "yeah sure"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "yes"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "LIST_OF_NO",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "no thank you"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "not needed"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "nah"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "nope"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "no",
+                                "synonyms": [
+                                    "i don't think so"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
