@@ -1,22 +1,15 @@
 const Alexa = require('ask-sdk-core');
 
-/*******variable declarations*************************************/
-let counter = 0;
-let artist_name = "";
-let answerList = [];
-
+/**************Constants and variables***************************/
 const greetings = ["Great!", "Excellent choice!", "Nice one"];
 const reply = ["Got it!", "Okay", "Understood"];
-
-//example questions
 const questionsForArtists = {
-  Arianagrande: ["How are you feeling right now?  Sad, Anxious  or  Happy?", "What is your best quality?  Wisdom,  Manipulation  or  Empathy? ", "Which emoji do you prefer?  Black Heart  or  White Clouds?"],
-  Brunomars: ["Choose a place for vacation: Tokyo, Los Angeles  or  Melbourne ", "How are you feeling right now?  Excited,  silly  or  surprised", "Its friday night!!! You're gonna stay home  or  hang out?"],
-  Billieeilish: ["If you had to, which would you change your name to? River,  Bailey  or Johnny", "Choose a form of potatoes:  French fries , Tater tots or Cheese Potatoes?", "Choose a style of hat:  Beanie or Cowboy"],
-  Charlieputh: ["What is your favorite icecream flavor ?  Vanilla,  Strawberry  or  Chocolates", "What is your favorite cuisine ? Italian , Mexican  or  American", "Which one would you choose : Beaches  or  Mountains ?"]
+  Arianagrande: ["How are you feeling right now? Sad, Anxious  or  Happy?", "What is your best quality? Wisdom, Manipulation or Empathy? ", "Which emoji do you prefer? Black Heart or White Clouds?"],
+  Brunomars: ["Choose a place for vacation: Tokyo, Vegas  or  Melbourne ", "How are you feeling right now? Excited, Silly  or  Surprised", "Its friday night!!! You're gonna stay home or hang out?"],
+  Billieeilish: ["If you had to, which would you change your name to? River,  Bailey  or Johnny", "Choose a form of potatoes: French fries , Tater tots or Cheese Potatoes?", "Choose a style of hat: Beanie or Cowboy"],
+  Charlieputh: ["What is your favorite icecream flavor ? Vanilla, Strawberry or Chocolates", "What is your favorite cuisine ? Italian , Mexican or American", "Which one would you choose : beaches or mountains ?"]
 };
-
-//initial song combos only for sad mood
+const songsForErrors = ["Party in the USA by Miley Cyrus", "Believer by Imagine Dragons", "Low by Flo Rida", "Blank Space by Taylor Swift"];
 const songsForCombos = {
   sad: {empathy : {blackheart: "Thank You Next" , whiteclouds: "Sweetner"},
         wisdom : {blackheart: "Every day", whiteclouds: "Be Alright"},
@@ -37,13 +30,13 @@ const songsForCombos = {
           silly: {stayhome: "Billionaire", hangout: "Young, wild and free"},
           surprised: {stayhome: "Please me", hangout: "Young girls"}},
   river : {frenchfries: {beanie: "Bad guy", cowboy: "Ocean eyes"},
-          tarttoes: {beanie: "Lovely", cowboy: "When the party is over"},
+          tatertots: {beanie: "Lovely", cowboy: "When the party is over"},
           cheesepotatoes: {beanie: "No time to die", cowboy: "Bury a friend"}},
   bailey : {frenchfries: {beanie: "Everything I wanted", cowboy: "Watch"},
-          tarttoes: {beanie: "Listen Before I go", cowboy: "Copy cat"},
+          tatertots: {beanie: "Listen Before I go", cowboy: "Copy cat"},
           cheesepotatoes: {beanie: "Belly ache", cowboy: "Bored"}},
   johnny : {frenchfries: {beanie: "Come out and play", cowboy: "Six feet under"},
-          tarttoes: {beanie: "My strange addiction", cowboy: "My boy"},
+          tatertotses: {beanie: "My strange addiction", cowboy: "My boy"},
           cheesepotatoes: {beanie: "Hostage", cowboy: "Fingers crossed"}},
   vanilla : {italian : {beaches: "See you again", mountains: "Attention"},
             mexican : {beaches: "We dont talk anymore", mountains: "One call away"},
@@ -53,15 +46,16 @@ const songsForCombos = {
             american : {beaches: "Patient", mountains: "Change"}},
   chocolate : {italian : {beaches: "Sober", mountains: "Oops"},
             mexican : {beaches: "Boy", mountains: "If you leave me now"},
-            american : {beaches: "Slow it down", mountains: "Suffer"}}
+            american : {beaches: "Slow it down", mountains: "S"}}
 };
 
-/********Functions that controls skill's behaviour****************/
+/********************Helper Functions**************************************/
+
 //gets the question from the questions list of the artist and returns the question.
 function getQuestion(counter, artist_name) {
-  //console.log("Inside get Question function");
+  console.log("Inside get Question function");
   let artist = artist_name.split(' ').join('');
-  //console.log(artist);
+  console.log(artist);
   let list = questionsForArtists[artist];
   let question = list[counter];
   console.log(question);
@@ -69,34 +63,35 @@ function getQuestion(counter, artist_name) {
 }
 
 //Function used to map the user inputs to find the "song match". Returns the song matched
-function giveResult() {
-  //console.log("Inside function for getting result");
+function giveResult(answerList) {
+  console.log("Inside function for getting result");
   let final_result = "";
   //answer list = ["happy", "empathy", "blackheart"];
   final_result = songsForCombos[answerList.slice(-3)[0]][answerList.slice(-2)[0]][answerList.slice(-1)[0]];
-  //console.log(final_result);
+  console.log(final_result);
   return final_result;
 }
 
 //function used to generate a random number from 0 to 2
-function randomGenerator() {
-  let randomNum = Math.floor(Math.random() * 2);
+function randomGenerator(max) {
+  let randomNum = Math.floor(Math.random() * max);
   return randomNum;
 }
 
-/********Intent Handlers************/
+/****************************Intent Handlers*****************************/
 const LaunchRequestHandler = {
   canHandle : (handlerInput) => {
     const request = handlerInput.requestEnvelope.request;
     return request.type === 'LaunchRequest';
   },
   handle : (handlerInput) => {
+    console.log(handlerInput);
     const speechText = 'Welcome to Song Match. I can help you understand which song by your favorite artist best matches your life. Please tell me the name of your favorite artist.';
     const repromtText = 'Welcome to Song Match..Please tell me the name of your favorite artist.';
     return handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(repromtText)
-      .withSimpleCard('Welcome user', speechText)
+      .withSimpleCard('Welcome User', speechText)
       .withShouldEndSession(false)
       .getResponse();
   }
@@ -108,21 +103,22 @@ const getArtistIntentHandler = {
     return request.type === 'IntentRequest' && request.intent.name === 'GetArtistIntent';
   },
   handle : (handlerInput) => {
-    artist_name = handlerInput.requestEnvelope.request.intent.slots.artist.value;
-
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    console.log(attributes);
+    attributes.artist_name = handlerInput.requestEnvelope.request.intent.slots.artist.value;
     //console.log(artist_name);
-    counter = 0;    //to keep track of the number of questions asked
-    let question = getQuestion(counter, artist_name);
-    //console.log("Returned from getQuestion function");
-    let randomNum = randomGenerator();  //to get a random number
+    attributes.counter = 0;
+    attributes.answerList = [];
+    let question = getQuestion(attributes.counter, attributes.artist_name);
+    console.log("Returned from getQuestion function");
+    let randomNum = randomGenerator(greetings.length);  //to get a random number
     let randomExpr = greetings[randomNum];
-    const speechText = randomExpr + '!' + artist_name + '. ' + question;     //asks the first question
-    counter += 1;
-
+    const speechText = randomExpr + '! ' + attributes.artist_name + '. ' + question;
+    attributes.counter += 1;
     return handlerInput.responseBuilder
       .speak(speechText)
-      .reprompt(speechText)
       .withSimpleCard('Get Artist', speechText)
+      .reprompt(speechText)
       .withShouldEndSession(false)
       .getResponse();
   }
@@ -131,28 +127,31 @@ const getArtistIntentHandler = {
 const getAnswerIntentHandler = {
   canHandle : (handlerInput) => {
     const request = handlerInput.requestEnvelope.request;
-    return request.type === 'IntentRequest'
-      && request.intent.name === 'GetAnswerIntent';
+    return request.type === 'IntentRequest' && request.intent.name === 'GetAnswerIntent';
   },
   handle : (handlerInput) => {
+    //console.log("inside handle of get answer intent");
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
     let answer = handlerInput.requestEnvelope.request.intent.slots.answer.value;
     answer = answer.toLowerCase();
+    //console.log("1." + answer)
     answer = answer.split(' ').join('');
-    answerList.push(answer);
-    //console.log(answerList);
+    //console.log("2" + answer)
+    attributes.answerList.push(answer);
+    console.log(attributes.answerList);
     let speechText = "";
-    if(counter < 3) {       //decides if further questions needs to be asked
-      let question = getQuestion(counter, artist_name);
-      let randomNum = randomGenerator();   //to get a random number
+    if(attributes.counter < 3) {
+      let question = getQuestion(attributes.counter, attributes.artist_name);
+      let randomNum = randomGenerator(reply.length);   //to get a random number 
       let randomExpr = reply[randomNum];
       speechText = randomExpr + '. ' + question;
-      counter += 1;
+      attributes.counter += 1;
     }
     else {
       speechText = "Thanks for answering the questions... ";
-      let song_matched = giveResult();
-      //console.log(song_matched);
-      speechText += "Based on your answers.....your " + artist_name + " song match is..." + "\"" + song_matched + "\". ";
+      let song_matched = giveResult(attributes.answerList);
+      console.log(song_matched);
+      speechText += "Based on your answers, your " + attributes.artist_name + " song match is " + "\"" + song_matched + "\". ";
       speechText += " Would you like to get another song match from a different artist? ";
     }
     return handlerInput.responseBuilder
@@ -170,30 +169,22 @@ const getPlayAgainIntentHandler = {
     return request.type === 'IntentRequest' && request.intent.name === 'GetPlayAgainIntent';
   },
   handle : (handlerInput) => {
-    let intentType = "";
     if(handlerInput.requestEnvelope.request.intent.slots.yes.value != null) {
-      intentType = "yes";
-      counter = 0;
-      artist_name = "";
-      answerList = [];
       return LaunchRequestHandler.handle(handlerInput);
     }
     else {
-      intentType = "no";
       return  CancelAndStopIntentHandler.handle(handlerInput);
     }
   }
 };
-
 const RepeatIntentHandler = {
   canHandle : (handlerInput) => {
     console.log("Inside the can handle repeat handler");
     const request = handlerInput.requestEnvelope.request;
-    return  request.type === 'IntentRequest'
-      && request.intent.name === 'AMAZON.RepeatIntent'; 
+    return request.type === 'IntentRequest' && request.intent.name === 'AMAZON.RepeatIntent'; 
   },
   handle : (handlerInput) => {
-    console.log("Inside the handle of repeat handler")
+    console.log("Inside the handle of repeat handler");
     const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
     const { lastResponse } = sessionAttributes;
     const speechText = lastResponse;
@@ -209,32 +200,32 @@ const RepeatIntentHandler = {
 const HelpIntentHandler = {
   canHandle : (handlerInput) => {
     const request = handlerInput.requestEnvelope.request;
-    return request.type === 'IntentRequest'
-      && request.intent.name === 'AMAZON.HelpIntent';
+    return request.type === 'IntentRequest' && request.intent.name === 'AMAZON.HelpIntent';
   },
   handle : (handlerInput) => {
+    console.log("Inside help request handle");
     const speechText = 'Tell me your favorite artist. I will ask a few questions and at the end I will tell you which song of your favorite ar matches your life.';
-
     return handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(speechText)
       .withSimpleCard('Help user', speechText)
+      .withShouldEndSession(false)
       .getResponse();
   }
 };
 
 const CancelAndStopIntentHandler = {
-  canHandle : (handlerInput) => {
+  canHandle: (handlerInput) => {
     const request = handlerInput.requestEnvelope.request;
     return request.type === 'IntentRequest'
       && (request.intent.name === 'AMAZON.CancelIntent' || request.intent.name === 'AMAZON.StopIntent');
   },
-  handle : (handlerInput) => {
+  handle: (handlerInput) => {
     const speechText = 'Thank you for using Song Match. For another great skill, check out Song Quiz!';
 
     return handlerInput.responseBuilder
       .speak(speechText)
-      .withSimpleCard('Cancel application', speechText)
+      .withSimpleCard('Cancel or quit the application', speechText)
       .withShouldEndSession(true)
       .getResponse();
   }
@@ -242,13 +233,11 @@ const CancelAndStopIntentHandler = {
 
 const SessionEndedRequestHandler = {
   canHandle : (handlerInput) => {
-    return handlerInput.requestEnvelope.request.type === 'SessionEndedRequest';
+    const request = handlerInput.requestEnvelope.request;
+    return request.type === 'SessionEndedRequest';
   },
-  handle : (handlerInput) => {
-    //any cleanup logic goes here
-    counter = 0;
-    artist_name = "";
-    answerList = [];
+  handle(handlerInput) {
+    console.log("cleaning up");
     return handlerInput.responseBuilder.getResponse();
   }
 };
@@ -257,9 +246,11 @@ const ErrorHandler = {
   canHandle() {
     return true;
   },
-  handle : (handlerInput, error) => {
+  handle(handlerInput, error) {
     console.log(`Error handled: ${error.message}`);
-    const speechText = "Sorry, I can\'t understand the command. Please say again.";
+    let randomNum = randomGenerator(songsForErrors.length);  //to get a random number
+    let randomSong = songsForErrors[randomNum];
+    const speechText = "Sorry, an error occured. But here is a song that might match your mood : \"" + randomSong + "\". Please cancel and try running the application again to play song match";
     return handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(speechText)
@@ -279,7 +270,7 @@ const saveResponseForRepeatInterceptor = {
   },
 };
 
-/***********Lambda Handler*********************/
+/**************************Lambda Handler*********************/
 exports.handler = Alexa.SkillBuilders.custom()
   .addRequestHandlers(
     LaunchRequestHandler,
@@ -293,3 +284,4 @@ exports.handler = Alexa.SkillBuilders.custom()
   .addResponseInterceptors(saveResponseForRepeatInterceptor)
   .addErrorHandlers(ErrorHandler)
   .lambda();
+
