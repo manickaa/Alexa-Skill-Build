@@ -51,7 +51,7 @@ const songsForCombos = {
             american : {beaches: "Patient", mountains: "Change"}},
   chocolate : {italian : {beaches: "Sober", mountains: "Oops"},
             mexican : {beaches: "Boy", mountains: "If you leave me now"},
-            american : {beaches: "Slow it down", mountains: "S"}}
+            american : {beaches: "Slow it down", mountains: "Seventeen"}}
 };
 
 module.exports = {
