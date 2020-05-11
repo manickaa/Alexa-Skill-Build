@@ -19,10 +19,6 @@
                     ]
                 },
                 {
-                    "name": "AMAZON.PauseIntent",
-                    "samples": []
-                },
-                {
                     "name": "AMAZON.StopIntent",
                     "samples": [
                         "Stop"
@@ -73,21 +69,12 @@
                     ]
                 },
                 {
-                    "name": "GetPlayAgainIntent",
-                    "slots": [
-                        {
-                            "name": "yes",
-                            "type": "LIST_OF_YES"
-                        },
-                        {
-                            "name": "no",
-                            "type": "LIST_OF_NO"
-                        }
-                    ],
-                    "samples": [
-                        "{no}",
-                        "{yes}"
-                    ]
+                    "name": "AMAZON.YesIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NoIntent",
+                    "samples": []
                 }
             ],
             "types": [
@@ -314,62 +301,6 @@
                         {
                             "name": {
                                 "value": "Sad"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "LIST_OF_YES",
-                    "values": [
-                        {
-                            "name": {
-                                "value": "absolutely"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "yeah",
-                                "synonyms": [
-                                    "yeah sure"
-                                ]
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "yes"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "LIST_OF_NO",
-                    "values": [
-                        {
-                            "name": {
-                                "value": "no thank you"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "not needed"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "nah"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "nope"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "no",
-                                "synonyms": [
-                                    "i don't think so"
-                                ]
                             }
                         }
                     ]
